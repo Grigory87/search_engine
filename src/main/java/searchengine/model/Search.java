@@ -8,8 +8,8 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Search {
 
     @Id

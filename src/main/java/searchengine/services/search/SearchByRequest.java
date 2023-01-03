@@ -64,7 +64,9 @@ public class SearchByRequest {
                 .distinct()
                 .toList();
 
-        List<Search> searchList = indexRepository.findPagesByQuery(
+//        List<Search> searchList = indexRepository.findPagesByQuery(
+//                listLemmaId, listPageId, limit, offset);
+        List<Search> searchList = indexRepository.findPagesBySearch(
                 listLemmaId, listPageId, limit, offset);
 
         List<SearchData> searchDataList = getStatisticsForEachPage(searchList, listLemmaName, site);
