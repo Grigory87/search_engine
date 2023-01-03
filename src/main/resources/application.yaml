@@ -1,0 +1,58 @@
+server:
+  port: 8080
+
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+  main:
+    banner-mode: off
+  datasource:
+    url: jdbc:mysql://localhost:3306/search_engine2?serverTimezone=UTC&useUnicode=true
+    username: root
+    password: broot
+    hikari:
+      data-source-properties:
+        useSSL: false
+        createDatabaseIfNotExist: true
+
+  jpa:
+    generate-ddl: true
+    show_sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        ddl-auto: update
+
+indexing-settings:
+  sites:
+#    - url: https://www.lenta.ru
+#      name: Лента.ру
+#    - url: https://skillbox.ru
+#      name: Skillbox
+    - url: https://www.playback.ru
+      name: PlayBack.Ru
+#    - url: http://radiomv.ru
+#      name: RadioMV.ru
+    - url: https://lutherancathedral.ru
+      name: LutheranCathedral.ru
+
+connect:
+  user-agent: Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6
+  referrer: http://www.google.com
+  cookie:
+    auth: auth
+    token: token
+  timeout: 100000
+  ignoreHttpErrors: true
+  ignoreContentType: true
+  maxBodySize: 0
+
+field-settings:
+  fields:
+    - name: title
+      selector: title
+      weight: 1.0
+    - name: body
+      selector: body
+      weight: 0.8
