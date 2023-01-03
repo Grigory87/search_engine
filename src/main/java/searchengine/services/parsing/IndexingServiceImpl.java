@@ -82,7 +82,8 @@ public class IndexingServiceImpl implements IndexingService {
             return new IndexResponse(false,"Индексация не запущена");
         }
         threads.forEach(Thread::interrupt);
-        this.threads.removeAll(threads);
+//        this.threads.removeAll(threads);
+        threads.clear();
         return new IndexResponse(true);
     }
 
