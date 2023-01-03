@@ -17,8 +17,7 @@ public class Lemma {
     private long id;
 
     @ManyToOne()
-    @JoinColumn(name = "site_id", referencedColumnName = "id",
-                nullable = false)
+    @JoinColumn(name = "site_id", referencedColumnName = "id", nullable = false)
     private Site site;
 
     @Column(columnDefinition = "VARCHAR(255)", nullable = false)
