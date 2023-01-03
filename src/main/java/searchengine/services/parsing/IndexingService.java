@@ -1,6 +1,6 @@
 package searchengine.services.parsing;
 
-import searchengine.dto.indexing.ResponseIndexing;
+import searchengine.dto.IndexResponse;
 import searchengine.model.IndexTable;
 import searchengine.model.Page;
 import searchengine.model.Site;
@@ -12,9 +12,9 @@ public interface IndexingService {
     List<Site> getSitesFromConfig();
     void addSitesInDBFromConfig(List<Site> siteList);
     boolean isIndexing();
-    ResponseIndexing startIndexing();
-    ResponseIndexing stopIndexing();
-    ResponseIndexing indexPage(String url);
+    IndexResponse startIndexing();
+    IndexResponse stopIndexing();
+    IndexResponse indexPage(String url);
     Optional<Site> getSiteByUrl(String url);
     Page getPageById(long id);
     long countPageBySite(Site site);

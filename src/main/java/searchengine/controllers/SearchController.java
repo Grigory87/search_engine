@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import searchengine.dto.search.ResponseSearch;
+import searchengine.dto.SearchResponse;
 import searchengine.repository.IndexRepository;
 import searchengine.services.parsing.IndexingService;
 import searchengine.services.parsing.PageParser;
@@ -25,7 +25,7 @@ public class SearchController {
 
 
     @GetMapping(value = "/search")
-    public ResponseEntity<ResponseSearch> search(@RequestParam("query") String query,
+    public ResponseEntity<SearchResponse> search(@RequestParam("query") String query,
                                                  @RequestParam(value = "site", defaultValue = "") String siteUrl,
                                                  @RequestParam(value = "offset", defaultValue = "0") int offset,
                                                  @RequestParam(value = "limit", defaultValue = "0") int limit) {

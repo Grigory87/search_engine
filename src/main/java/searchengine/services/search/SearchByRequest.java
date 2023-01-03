@@ -1,9 +1,7 @@
 package searchengine.services.search;
 
-import searchengine.dto.search.NegativeSearchingResponse;
-import searchengine.dto.search.PositiveSearchingResponse;
-import searchengine.dto.search.ResponseSearch;
-import searchengine.dto.search.SearchData;
+import searchengine.dto.SearchResponse;
+import searchengine.dto.SearchData;
 import searchengine.model.*;
 import searchengine.repository.IndexRepository;
 import searchengine.services.parsing.IndexingService;
@@ -24,17 +22,18 @@ public class SearchByRequest {
     private final IndexingService indexingService;
     private final PageParser pageParser;
 
-    public ResponseSearch getResponseSearchQuery(
+    public SearchResponse getResponseSearchQuery(
             String query, String siteUrl, int offset, int limit) {
         if(query.equals("")){
-            return new NegativeSearchingResponse("Задан пустой поисковый запрос");
+            return new SearchResponse(false,
+                    "Задан пустой поисковый запрос");
         }
         Site site = indexingService.getSiteByUrl(siteUrl).orElse(null);
 
         List<Lemma> lemmaListFromDB =
                 morphologyService.collectLemmasFromRequest(query, site);
         if(lemmaListFromDB.isEmpty()) {
-            return new NegativeSearchingResponse(
+            return new SearchResponse(false,
                     "По вашему запросу ничего не найдено");
         }
 
@@ -69,7 +68,7 @@ public class SearchByRequest {
                 listLemmaId, listPageId, limit, offset);
 
         List<SearchData> searchDataList = getStatisticsForEachPage(searchList, listLemmaName, site);
-        return new PositiveSearchingResponse(searchList.size(), searchDataList);
+        return new SearchResponse(true, searchList.size(), searchDataList);
     }
 
     private List<SearchData> getStatisticsForEachPage(

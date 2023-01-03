@@ -5,9 +5,7 @@ import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
 
 import searchengine.config.SitesConfig;
-import searchengine.dto.indexing.PositiveIndexingResponse;
-import searchengine.dto.indexing.ResponseIndexing;
-import searchengine.dto.indexing.NegativeIndexingResponse;
+import searchengine.dto.IndexResponse;
 import searchengine.model.*;
 import searchengine.repository.IndexRepository;
 import searchengine.repository.LemmaRepository;
@@ -55,14 +53,14 @@ public class IndexingServiceImpl implements IndexingService {
     }
 
     @Override
-    public ResponseIndexing startIndexing() {
+    public IndexResponse startIndexing() {
         if (isIndexing()) {
-            return new NegativeIndexingResponse("Индексация уже запущена");
+            return new IndexResponse(false,"Индексация уже запущена");
         }
         threads = new ArrayList<>();
         List<Site> siteList = getSitesFromConfig();
         if (siteList.isEmpty()) {
-            return new NegativeIndexingResponse(
+            return new IndexResponse(false,
                     "Пустой список сайтов в файле application.yaml");
         }
 
@@ -75,27 +73,27 @@ public class IndexingServiceImpl implements IndexingService {
         siteList.forEach(site -> threads.add(new ThreadForSite(site, pageParser)));
         threads.forEach(Thread::start);
 
-        return new PositiveIndexingResponse(true);
+        return new IndexResponse(true);
     }
 
     @Override
-    public ResponseIndexing stopIndexing() {
+    public IndexResponse stopIndexing() {
         if (!isIndexing()) {
-            return new NegativeIndexingResponse("Индексация не запущена");
+            return new IndexResponse(false,"Индексация не запущена");
         }
         threads.forEach(Thread::interrupt);
         this.threads.removeAll(threads);
-        return new PositiveIndexingResponse(true);
+        return new IndexResponse(true);
     }
 
-    public ResponseIndexing indexPage(String url) {
+    public IndexResponse indexPage(String url) {
         String[] arrayString = url.split("/+");
         String enteredSite = arrayString[0] + "//" + arrayString[1];
 
         Site site = getSitesFromConfig().stream()
                 .filter(s -> s.getUrl().equals(enteredSite)).findFirst().orElse(null);
         if (site == null) {
-            return new NegativeIndexingResponse("Данная страница находится за пределами"
+            return new IndexResponse(false,"Данная страница находится за пределами"
                     + " сайтов, указанных в конфигурационном файле");
         }
         String shortUrl = url.replace(enteredSite, "");
@@ -126,7 +124,7 @@ public class IndexingServiceImpl implements IndexingService {
         }
         pageParser.updateStatus(site, StatusType.INDEXED);
 
-        return new PositiveIndexingResponse(true);
+        return new IndexResponse(true);
     }
 
     @Override
