@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import searchengine.model.IndexTable;
+import searchengine.model.Page;
 import searchengine.model.Search;
 
 import java.util.Collection;
@@ -15,6 +16,7 @@ import java.util.List;
 //public interface IndexRepository extends JpaRepository<IndexTable, Long>, CustomizedSearch<Search> {
 public interface IndexRepository extends JpaRepository<IndexTable, Long> {
     List<IndexTable> findByLemma_IdIn(Collection<Long> id);
+    List<IndexTable> findByPage(Page page);
 
     @Query(value = "select page_id as pageId, (SUM(`rank`) / " +
             "( with relevance as (SELECT page_id, SUM(`rank`) as abs_relev FROM `'index'` " +

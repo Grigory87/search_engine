@@ -24,7 +24,6 @@ public class IndexingServiceImpl implements IndexingService {
     private final IndexRepository indexRepository;
     private final SitesConfig sitesConfig;
     private final PageParser pageParser;
-    private List<ThreadForSite> threads;
 
     @Override
     public List<Site> getSitesFromConfig() {
@@ -57,22 +56,22 @@ public class IndexingServiceImpl implements IndexingService {
         if (isIndexing()) {
             return new IndexResponse(false,"Индексация уже запущена");
         }
-        threads = new ArrayList<>();
         List<Site> siteList = getSitesFromConfig();
         if (siteList.isEmpty()) {
             return new IndexResponse(false,
                     "Пустой список сайтов в файле application.yaml");
         }
 
-        for(Site site : siteList) {
+        for (Site site : siteList) {
             Optional<Site> siteOptional = getSiteByUrl(site.getUrl());
-            siteOptional.ifPresent(siteRepository::delete);
+            if (siteOptional.isPresent()) {
+                deleteSiteData(siteOptional.get());
+            }
         }
         addSitesInDBFromConfig(siteList);
+        StopIndicator.newStopIndicator();
 
-        siteList.forEach(site -> threads.add(new ThreadForSite(site, pageParser)));
-        threads.forEach(Thread::start);
-
+        siteList.forEach(site -> new ThreadForSite(site, pageParser).start());
         return new IndexResponse(true);
     }
 
@@ -81,9 +80,7 @@ public class IndexingServiceImpl implements IndexingService {
         if (!isIndexing()) {
             return new IndexResponse(false,"Индексация не запущена");
         }
-        threads.forEach(Thread::interrupt);
-//        this.threads.removeAll(threads);
-        threads.clear();
+        StopIndicator.stop();
         return new IndexResponse(true);
     }
 
@@ -126,6 +123,19 @@ public class IndexingServiceImpl implements IndexingService {
         pageParser.updateStatus(site, StatusType.INDEXED);
 
         return new IndexResponse(true);
+    }
+
+    public void deleteSiteData(Site site) {
+        List<Page> pageList = pageRepository.findBySite(site);
+        if (!pageList.isEmpty()) {
+            pageList.forEach(page -> indexRepository.deleteAll(indexRepository.findByPage(page)));
+            pageRepository.deleteAll(pageList);
+        }
+        List<Lemma> lemmaList = lemmaRepository.findBySite(site);
+        if (!lemmaList.isEmpty()) {
+            lemmaRepository.deleteAll(lemmaList);
+        }
+        siteRepository.delete(site);
     }
 
     @Override

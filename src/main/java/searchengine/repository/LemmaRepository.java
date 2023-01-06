@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface LemmaRepository extends JpaRepository<Lemma, Long> {
     long countLemmaBySite(Site site);
+    List<Lemma> findBySite(Site site);
     List<Lemma> findByIndexList_Page_Id(long id);
     List<Lemma> findBySiteAndLemmaIn(Site site, Collection<String> lemmas);
     List<Lemma> findByLemmaInOrderByFrequency(List<String> lemmas);

@@ -8,11 +8,15 @@ import org.springframework.transaction.annotation.Transactional;
 import searchengine.model.Page;
 import searchengine.model.Site;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface PageRepository extends JpaRepository<Page, Long> {
     Optional<Page> findPageByPathAndSite(String url, Site site);
+
+    List<Page> findBySite(Site site);
+
     Page findPageById(long id);
     Page findByPath(String path);
     @Transactional

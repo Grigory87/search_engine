@@ -35,6 +35,10 @@ public class WalkSiteLink extends RecursiveAction {
 
     @Override
     protected void compute() {
+        if (StopIndicator.getStop()) {
+            return;
+        }
+
         List<WalkSiteLink> subList = new ArrayList<>(30);
         try {
             Thread.sleep(300);
@@ -56,7 +60,6 @@ public class WalkSiteLink extends RecursiveAction {
                 }
             }
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
             e.printStackTrace();
         } catch (IOException e) {
             pageParser.updateStatus(site, StatusType.FAILED, e.getMessage());

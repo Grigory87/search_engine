@@ -34,10 +34,10 @@ public class Site {
     @Column(columnDefinition = "VARCHAR(255)", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "site", cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "site", cascade = CascadeType.REMOVE)
     private List<Page> indexPage;
 
-    @OneToMany(mappedBy = "site", cascade  = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "site", cascade  = CascadeType.REMOVE)
     private List<Lemma> indexLemma;
 
     public Site(String url, String name) {
