@@ -1,27 +1,34 @@
 package searchengine.services.search;
 
-import searchengine.dto.SearchResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import searchengine.dto.SearchData;
+import searchengine.dto.SearchResponse;
 import searchengine.model.*;
 import searchengine.repository.IndexRepository;
+import searchengine.repository.SearchRepository;
 import searchengine.services.parsing.IndexingService;
 import searchengine.services.parsing.PageParser;
 import searchengine.services.ruMorphology.MorphologyService;
 
-import lombok.RequiredArgsConstructor;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@Service
 @RequiredArgsConstructor
-public class SearchByRequest {
+public class SearchServiceImpl implements SearchService {
     private final IndexRepository indexRepository;
+    private final SearchRepository searchRepository;
     private final MorphologyService morphologyService;
     private final IndexingService indexingService;
     private final PageParser pageParser;
 
+    @Override
     public SearchResponse getResponseSearchQuery(
             String query, String siteUrl, int offset, int limit) {
         if(query.equals("")){
@@ -64,19 +71,9 @@ public class SearchByRequest {
                 .distinct()
                 .toList();
 
-        //////////////////
-
         float maxRelevance = indexRepository.getMaxRelevance(listLemmaId, listPageId);
-        List<Search> searchList = indexRepository.findPageBySearch(
+        List<Search> searchList = searchRepository.findPageBySearch(
                 listLemmaId, listPageId, maxRelevance, limit, offset);
-
-        /////////////////
-
-//        List<Search> searchList = indexRepository.findPagesByQuery(
-//                listLemmaId, listPageId, limit, offset);
-//        List<Search> searchList = indexRepository.findPagesBySearch(
-//                listLemmaId, listPageId, limit, offset);
-
 
         List<SearchData> searchDataList = getStatisticsForEachPage(searchList, listLemmaName, site);
         return new SearchResponse(true, searchList.size(), searchDataList);
@@ -134,8 +131,7 @@ public class SearchByRequest {
         }
 
         if(mapOccurrencesLemmas.size() < 3) {
-            int index = mapOccurrencesLemmas.entrySet().stream()
-                    .map(key -> key.getValue()).findFirst().get();
+            int index = mapOccurrencesLemmas.values().stream().findFirst().get();
             while (snippet.length() < 280) {
                 writeSnippet(sentences.get(index), listLemmaName, snippet);
                 index++;
@@ -171,3 +167,4 @@ public class SearchByRequest {
         return builder.toString();
     }
 }
+

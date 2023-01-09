@@ -8,30 +8,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import searchengine.dto.SearchResponse;
-import searchengine.repository.IndexRepository;
-import searchengine.services.parsing.IndexingService;
-import searchengine.services.parsing.PageParser;
-import searchengine.services.ruMorphology.MorphologyService;
-import searchengine.services.search.SearchByRequest;
+import searchengine.services.search.SearchService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class SearchController {
-    private final IndexRepository indexRepository;
-    private final IndexingService indexingService;
-    private final MorphologyService morphologyService;
-    private final PageParser pageParser;
-
+    private final SearchService searchService;
 
     @GetMapping(value = "/search")
     public ResponseEntity<SearchResponse> search(@RequestParam("query") String query,
                                                  @RequestParam(value = "site", defaultValue = "") String siteUrl,
                                                  @RequestParam(value = "offset", defaultValue = "0") int offset,
                                                  @RequestParam(value = "limit", defaultValue = "0") int limit) {
-        SearchByRequest searchByRequest = new SearchByRequest(indexRepository,
-                morphologyService, indexingService, pageParser);
-        return ResponseEntity.ok(searchByRequest.getResponseSearchQuery(
+        return ResponseEntity.ok(searchService.getResponseSearchQuery(
                 query, siteUrl, offset, limit));
     }
 }
