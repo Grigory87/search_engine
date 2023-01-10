@@ -5,7 +5,7 @@
 </div>
 <div>
   
-### Используются технологии: SpringBoot, SQL, Hibernate, Lombok, ForkJoinPool, Thread.
+### Используются технологии: SpringBoot, SQL, Hibernate, Lombok, Maven, ForkJoinPool, Thread.
 
 >#### Обязательные настройки в файле application.yaml:
   1. Подключение к базе MySQL, пример:
