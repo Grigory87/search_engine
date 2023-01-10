@@ -34,7 +34,6 @@ public class StatisticsServiceImpl implements StatisticsService {
         }
 
         if(!isEmpty) {
-//            List<Site> sitesList = indexingService.getSitesFromDB();
             List<Site> sitesList = siteRepository.findAll();
             List<DetailedStatisticsItem> detailed = new ArrayList<>();
             long countAllPage = 0;

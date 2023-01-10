@@ -1,7 +1,6 @@
 package searchengine.model;
 
 import lombok.*;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,7 +16,6 @@ public class Page {
     private long id;
 
     @ManyToOne()
-//    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinColumn(name = "site_id", referencedColumnName = "id", nullable = false)
     private Site site;
 

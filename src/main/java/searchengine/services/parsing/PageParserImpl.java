@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import searchengine.config.ConnectConfig;
 import searchengine.config.Cookie;

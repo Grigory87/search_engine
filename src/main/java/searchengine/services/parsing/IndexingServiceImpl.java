@@ -62,16 +62,14 @@ public class IndexingServiceImpl implements IndexingService {
                     "Пустой список сайтов в файле application.yaml");
         }
 
-        for (Site site : siteList) {
-            Optional<Site> siteOptional = getSiteByUrl(site.getUrl());
-            if (siteOptional.isPresent()) {
-                deleteSiteData(siteOptional.get());
-            }
-        }
+        siteList.forEach(site ->
+                getSiteByUrl(site.getUrl()).ifPresent(this::deleteSiteData));
         addSitesInDBFromConfig(siteList);
         StopIndicator.newStopIndicator();
 
-        siteList.forEach(site -> new ThreadForSite(site, pageParser).start());
+        siteList.forEach(site ->
+            getSiteByUrl(site.getUrl()).ifPresent(value ->
+                    new ThreadForSite(value, pageParser).start()));
         return new IndexResponse(true);
     }
 

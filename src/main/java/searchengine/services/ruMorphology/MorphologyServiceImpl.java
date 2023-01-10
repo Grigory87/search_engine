@@ -24,10 +24,6 @@ public class MorphologyServiceImpl implements MorphologyService {
     private final IndexRepository indexRepository;
     private final FieldsConfig fieldsConfig;
 
-    public long countLemmaBySite(Site site) {
-        return lemmaRepository.countLemmaBySite(site);
-    }
-
     @Override
     public List<Field> getFieldList() {
         return fieldsConfig.getFields();
@@ -109,14 +105,5 @@ public class MorphologyServiceImpl implements MorphologyService {
             }
         }
         return uniqueLemmasWithRank;
-    }
-
-    public List<Lemma> getLemmasByPageId(long id) {
-        return lemmaRepository.findByIndexList_Page_Id(id);
-    }
-
-    public void changeFrequencyLemmasForOnePage(List<Lemma> lemmaList) {
-        lemmaRepository.saveAll(lemmaList);
-        lemmaRepository.flush();
     }
 }
