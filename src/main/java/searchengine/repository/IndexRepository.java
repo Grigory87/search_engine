@@ -14,8 +14,10 @@ import java.util.List;
 @Repository
 public interface IndexRepository extends JpaRepository<IndexTable, Long> {
     List<IndexTable> findByLemmaIdIn(Collection<Long> id);
-    List<IndexTable> findByPage(Page page);
+    @Query(value = "SELECT page_id FROM `'index'` where lemma_id = :lemmaId" , nativeQuery = true)
+    List<Long> getPagesIdByLemmaId(@Param("lemmaId") long lemmaId);
 
+    List<IndexTable> findByPage(Page page);
     @Query(value = "with relevance as (SELECT page_id, SUM(`rank`) as abs_relev FROM `'index'` " +
             "WHERE lemma_id IN (:listLemma) AND page_id IN (:listPage) " +
             "GROUP BY page_id) select max(abs_relev) from relevance", nativeQuery = true)

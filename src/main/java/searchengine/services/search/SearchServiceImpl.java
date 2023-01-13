@@ -11,10 +11,7 @@ import searchengine.services.parsing.IndexingService;
 import searchengine.services.parsing.PageParser;
 import searchengine.services.ruMorphology.MorphologyService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,21 +48,33 @@ public class SearchServiceImpl implements SearchService {
         }
 
         List<Lemma> selectionOfLemmas = lemmaListFromDB.stream()
-                .filter(lemma -> ((lemma.getFrequency() * 100L) / totalPage) < 90).toList();
+                .filter(lemma ->
+                ((lemma.getFrequency() * 100L) / totalPage) < 90
+                && ((lemma.getFrequency() * 100L) / totalPage) > 10)
+                .toList();
 
-        List<Long> listLemmaId = selectionOfLemmas.stream()
+        List<Lemma> lemmasIsQuery = new ArrayList<>();
+        if (selectionOfLemmas.isEmpty()) {
+            lemmasIsQuery.addAll(lemmaListFromDB);
+        } else {
+            lemmasIsQuery.addAll(selectionOfLemmas);
+        }
+
+        Iterator<Lemma> iterator = lemmasIsQuery.iterator();
+        Lemma lemma = iterator.next();
+        List<Long> listPageId = indexRepository.getPagesIdByLemmaId(lemma.getId());
+        while (iterator.hasNext()) {
+            lemma = iterator.next();
+            List<Long> pagesId = indexRepository.getPagesIdByLemmaId(lemma.getId());
+            listPageId.retainAll(pagesId);
+        }
+
+        List<Long> listLemmaId = lemmasIsQuery.stream()
                 .mapToLong(Lemma::getId)
                 .boxed()
                 .toList();
 
-        List<IndexTable> indexList = indexingService.getIndexWithLemma(listLemmaId);
-
-        List<Long> listPageId = indexList.stream()
-                .map(indexTable -> indexTable.getPage().getId())
-                .distinct()
-                .toList();
-
-        List<String> listLemmaName = selectionOfLemmas.stream()
+        List<String> listLemmaName = lemmasIsQuery.stream()
                 .map(Lemma::getLemma)
                 .distinct()
                 .toList();
