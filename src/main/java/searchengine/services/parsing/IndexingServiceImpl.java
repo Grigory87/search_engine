@@ -104,7 +104,7 @@ public class IndexingServiceImpl implements IndexingService {
 
         if (pageRepository.findPageByPathAndSite(shortUrl, site).isPresent()) {
             Page page = pageRepository.findByPath(shortUrl);
-            List<Lemma> lemmaList = lemmaRepository.findByIndexList_Page_Id(page.getId());
+            List<Lemma> lemmaList = lemmaRepository.findByIndexListPageId(page.getId());
             pageRepository.deleteByPath(shortUrl);
 
             lemmaList.stream().peek(lemma -> lemma.setFrequency(lemma.getFrequency() - 1)).toList();
@@ -153,6 +153,6 @@ public class IndexingServiceImpl implements IndexingService {
 
     @Override
     public List<IndexTable> getIndexWithLemma(List<Long> lemmaId) {
-        return indexRepository.findByLemma_IdIn(lemmaId);
+        return indexRepository.findByLemmaIdIn(lemmaId);
     }
 }

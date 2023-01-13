@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 public interface IndexRepository extends JpaRepository<IndexTable, Long> {
-    List<IndexTable> findByLemma_IdIn(Collection<Long> id);
+    List<IndexTable> findByLemmaIdIn(Collection<Long> id);
     List<IndexTable> findByPage(Page page);
 
     @Query(value = "with relevance as (SELECT page_id, SUM(`rank`) as abs_relev FROM `'index'` " +

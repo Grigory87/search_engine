@@ -12,7 +12,7 @@ import java.util.List;
 public interface LemmaRepository extends JpaRepository<Lemma, Long> {
     long countLemmaBySite(Site site);
     List<Lemma> findBySite(Site site);
-    List<Lemma> findByIndexList_Page_Id(long id);
+    List<Lemma> findByIndexListPageId(long id);
     List<Lemma> findBySiteAndLemmaIn(Site site, Collection<String> lemmas);
     List<Lemma> findByLemmaInOrderByFrequency(List<String> lemmas);
     List<Lemma> findBySiteAndLemmaInOrderByFrequency(Site site, List<String> lemmas);
