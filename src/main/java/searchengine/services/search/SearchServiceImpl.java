@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -64,7 +63,7 @@ public class SearchServiceImpl implements SearchService {
         List<Long> listPageId = indexList.stream()
                 .map(indexTable -> indexTable.getPage().getId())
                 .distinct()
-                .collect(Collectors.toList());
+                .toList();
 
         List<String> listLemmaName = selectionOfLemmas.stream()
                 .map(Lemma::getLemma)
@@ -134,6 +133,9 @@ public class SearchServiceImpl implements SearchService {
             int index = mapOccurrencesLemmas.values().stream().findFirst().get();
             while (snippet.length() < 280) {
                 writeSnippet(sentences.get(index), listLemmaName, snippet);
+                if (index + 1 > sentences.size() - 1) {
+                    break;
+                }
                 index++;
             }
         } else {
