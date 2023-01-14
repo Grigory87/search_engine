@@ -150,9 +150,4 @@ public class IndexingServiceImpl implements IndexingService {
     public long countAllPage() {
         return pageRepository.countAllPage();
     }
-
-    @Override
-    public List<IndexTable> getIndexWithLemma(List<Long> lemmaId) {
-        return indexRepository.findByLemmaIdIn(lemmaId);
-    }
 }

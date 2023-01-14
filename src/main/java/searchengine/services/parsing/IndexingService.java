@@ -1,7 +1,6 @@
 package searchengine.services.parsing;
 
 import searchengine.dto.IndexResponse;
-import searchengine.model.IndexTable;
 import searchengine.model.Page;
 import searchengine.model.Site;
 
@@ -19,5 +18,4 @@ public interface IndexingService {
     Page getPageById(long id);
     long countPageBySite(Site site);
     long countAllPage();
-    List<IndexTable> getIndexWithLemma(List<Long> lemmaId);
 }

@@ -8,12 +8,10 @@ import org.springframework.stereotype.Repository;
 import searchengine.model.IndexTable;
 import searchengine.model.Page;
 
-import java.util.Collection;
 import java.util.List;
 
 @Repository
 public interface IndexRepository extends JpaRepository<IndexTable, Long> {
-    List<IndexTable> findByLemmaIdIn(Collection<Long> id);
     @Query(value = "SELECT page_id FROM `'index'` where lemma_id = :lemmaId" , nativeQuery = true)
     List<Long> getPagesIdByLemmaId(@Param("lemmaId") long lemmaId);
 
