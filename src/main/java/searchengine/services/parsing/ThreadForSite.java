@@ -27,5 +27,4 @@ public class ThreadForSite extends Thread {
                 + site.getUrl() + " "
                 + Tools.getTime((System.currentTimeMillis() - start) / 1000));
     }
-    
 }

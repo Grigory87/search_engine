@@ -23,6 +23,7 @@ public class SearchServiceImpl implements SearchService {
     private final MorphologyService morphologyService;
     private final IndexingService indexingService;
     private final PageParser pageParser;
+    private static final int MAX_LENGTH = 280;
 
     @Override
     public SearchResponse getResponseSearchQuery(
@@ -140,7 +141,7 @@ public class SearchServiceImpl implements SearchService {
 
         if(mapOccurrencesLemmas.size() < 3) {
             int index = mapOccurrencesLemmas.values().stream().findFirst().get();
-            while (snippet.length() < 280) {
+            while (snippet.length() < MAX_LENGTH) {
                 writeSnippet(sentences.get(index), listLemmaName, snippet);
                 if (index + 1 > sentences.size() - 1) {
                     break;
@@ -150,7 +151,7 @@ public class SearchServiceImpl implements SearchService {
         } else {
             for(Map.Entry<String, Integer> entry : mapOccurrencesLemmas.entrySet()) {
                 writeSnippet(entry.getKey(), listLemmaName, snippet);
-                if(snippet.length() > 280) {
+                if(snippet.length() > MAX_LENGTH) {
                     break;
                 }
             }
